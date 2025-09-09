@@ -267,7 +267,7 @@ const WeeklyPlannerDashboard = () => {
   
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header onHelpClick={() => setShowHowToUse(true)} />
       
       <main className="pt-16">
@@ -276,8 +276,8 @@ const WeeklyPlannerDashboard = () => {
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Weekly Planner</h1>
-                <p className="text-gray-600">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Weekly Planner</h1>
+                <p className="text-gray-600 dark:text-gray-300">
                   Organize your week with drag-and-drop task management
                 </p>
               </div>
@@ -290,18 +290,18 @@ const WeeklyPlannerDashboard = () => {
 
           {/* Supabase Configuration Notice */}
           {!supabase && (
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
               <div className="flex items-start">
-                <Icon name="AlertTriangle" size={20} className="text-amber-600 mr-3 mt-0.5" />
+                <Icon name="AlertTriangle" size={20} className="text-amber-600 dark:text-amber-400 mr-3 mt-0.5" />
                 <div>
-                  <h3 className="font-medium text-amber-900 mb-1">Supabase Configuration Required</h3>
-                  <p className="text-sm text-amber-800 mb-2">
+                  <h3 className="font-medium text-amber-900 dark:text-amber-100 mb-1">Supabase Configuration Required</h3>
+                  <p className="text-sm text-amber-800 dark:text-amber-200 mb-2">
                     To enable Google sign-in and cloud sync, please configure your Supabase credentials.
                   </p>
-                  <ol className="text-sm text-amber-800 space-y-1 ml-4">
+                  <ol className="text-sm text-amber-800 dark:text-amber-200 space-y-1 ml-4">
                     <li>1. Create a <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="underline">Supabase project</a></li>
-                    <li>2. Copy <code className="bg-amber-100 px-1 rounded">env.template</code> to <code className="bg-amber-100 px-1 rounded">.env.local</code></li>
-                    <li>3. Add your Supabase URL and API key to <code className="bg-amber-100 px-1 rounded">.env.local</code></li>
+                    <li>2. Copy <code className="bg-amber-100 dark:bg-amber-800 px-1 rounded">env.template</code> to <code className="bg-amber-100 dark:bg-amber-800 px-1 rounded">.env.local</code></li>
+                    <li>3. Add your Supabase URL and API key to <code className="bg-amber-100 dark:bg-amber-800 px-1 rounded">.env.local</code></li>
                     <li>4. Enable Google OAuth in Supabase Dashboard (Authentication → Providers → Google)</li>
                     <li>5. Set up Google OAuth credentials (see README.md for details)</li>
                     <li>6. Restart the development server</li>
@@ -313,18 +313,18 @@ const WeeklyPlannerDashboard = () => {
 
           {/* Instructions */}
           {showHowToUse && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 relative">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6 relative">
               <button
                 onClick={() => setShowHowToUse(false)}
-                className="absolute top-2 right-2 p-1 hover:bg-blue-100 rounded-full transition-colors"
+                className="absolute top-2 right-2 p-1 hover:bg-blue-100 dark:hover:bg-blue-800 rounded-full transition-colors"
               >
-                <Icon name="X" size={16} className="text-blue-600" />
+                <Icon name="X" size={16} className="text-blue-600 dark:text-blue-400" />
               </button>
               <div className="flex items-start pr-8">
-                <Icon name="Info" size={20} className="text-blue-600 mr-3 mt-0.5" />
+                <Icon name="Info" size={20} className="text-blue-600 dark:text-blue-400 mr-3 mt-0.5" />
                 <div>
-                  <h3 className="font-medium text-blue-900 mb-1">How to use:</h3>
-                  <ul className="text-sm text-blue-800 space-y-1">
+                  <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-1">How to use:</h3>
+                  <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
                     <li>• Click on empty gray boxes to create new tasks</li>
                     <li>• Drag and drop tasks between different time slots</li>
                     <li>• Click on existing tasks to edit their content</li>
@@ -366,7 +366,7 @@ const WeeklyPlannerDashboard = () => {
           
 
           {/* Weekly Grid */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             {isMobile ? (
               <MobileWeeklyView
                 tasks={tasks}
@@ -400,7 +400,7 @@ const WeeklyPlannerDashboard = () => {
 
           {/* Footer Info */}
           <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {!supabase 
                 ? 'Tasks are saved locally. Configure Supabase to enable cloud sync.'
                 : isAuthenticated 
