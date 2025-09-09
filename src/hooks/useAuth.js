@@ -16,15 +16,19 @@ export function useAuth() {
       setLoading(false);
     });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase?.auth?.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user || null);
-        setLoading(false);
-      }
-    );
+    // Listen for auth changes only if supabase is configured
+    if (supabase) {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          setUser(session?.user || null);
+          setLoading(false);
+        }
+      );
 
-    return () => subscription?.unsubscribe();
+      return () => subscription?.unsubscribe();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const handleSignIn = async () => {
@@ -34,6 +38,15 @@ export function useAuth() {
     } catch (error) {
       console.error('Sign in error:', error);
       setLoading(false);
+      
+      // Show user-friendly error message
+      if (error.message?.includes('provider is not enabled')) {
+        alert('Google sign-in is not configured. Please enable Google OAuth in your Supabase project dashboard under Authentication > Providers.');
+      } else if (error.message?.includes('OAuth configuration error')) {
+        alert('OAuth configuration error. Please check your Google OAuth settings in Supabase Dashboard.');
+      } else {
+        alert('Sign-in failed. Please check your configuration and try again.');
+      }
     }
   };
 

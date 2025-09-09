@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 import Button from './Button';
 
-const Header = () => {
+const Header = ({ onHelpClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
@@ -30,8 +30,13 @@ const Header = () => {
   ];
 
   const handleNavigation = (path) => {
-    navigate(path);
-    setIsMoreMenuOpen(false);
+    if (path === '/help' && onHelpClick) {
+      onHelpClick();
+      setIsMoreMenuOpen(false);
+    } else {
+      navigate(path);
+      setIsMoreMenuOpen(false);
+    }
   };
 
   const isActivePath = (path) => {

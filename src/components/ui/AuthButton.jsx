@@ -2,6 +2,7 @@ import React from 'react';
 import Button from './Button';
 import Icon from '../AppIcon';
 import { useAuth } from '../../hooks/useAuth';
+import { supabase } from '../../lib/supabase';
 
 const AuthButton = ({ className = "" }) => {
   const { user, loading, signIn, signOut, isAuthenticated } = useAuth();
@@ -43,6 +44,18 @@ const AuthButton = ({ className = "" }) => {
         >
           Sign Out
         </Button>
+      </div>
+    );
+  }
+
+  // Show configuration message if Supabase is not configured
+  if (!supabase) {
+    return (
+      <div className={`flex items-center space-x-2 ${className}`}>
+        <Icon name="AlertCircle" size={16} className="text-amber-500" />
+        <span className="text-sm text-amber-600">
+          Configure Supabase to enable sign-in
+        </span>
       </div>
     );
   }

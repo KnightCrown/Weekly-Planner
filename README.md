@@ -28,7 +28,55 @@ A modern React-based project utilizing the latest frontend technologies and tool
    yarn install
    ```
    
-2. Start the development server:
+2. Set up environment variables:
+   
+   **For Local Development:**
+   ```bash
+   # Copy the template file
+   cp env.template .env.local
+   
+   # Edit .env.local with your actual credentials
+   # .env.local is ignored by git and safe for local development
+   ```
+   
+   **For Production Deployment:**
+   ```bash
+   # Copy the template file
+   cp env.template .env
+   
+   # Edit .env with your production credentials
+   ```
+   
+   **Required Environment Variables:**
+   ```bash
+   # Supabase Configuration
+   VITE_SUPABASE_URL=your_supabase_project_url_here
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+   ```
+   
+   To get these values:
+   - Go to [Supabase Dashboard](https://supabase.com/dashboard)
+   - Create a new project or select an existing one
+   - Go to Settings > API
+   - Copy the Project URL and anon/public key
+   
+   **Enable Google OAuth (Required for Sign-in):**
+   1. In Supabase Dashboard, go to **Authentication > Providers**
+   2. Find **Google** and toggle it **ON**
+   3. Set up Google OAuth credentials:
+      - Go to [Google Cloud Console](https://console.cloud.google.com/)
+      - Create OAuth 2.0 Client ID
+      - Add redirect URI: `https://your-project-id.supabase.co/auth/v1/callback`
+      - Add local redirect URI: `http://localhost:4028/auth/v1/callback`
+   4. Copy Client ID and Client Secret to Supabase Google provider settings
+   
+   **Security Notes:**
+   - `.env.local` is automatically ignored by git (safe for local development)
+   - `.env` is also ignored by git (safe for production secrets)
+   - Never commit actual API keys to version control
+   - Use different Supabase projects for development and production
+   
+3. Start the development server:
    ```bash
    npm start
    # or
