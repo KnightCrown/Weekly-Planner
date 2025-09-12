@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from '../../components/ui/Header';
 import WeeklyGrid from './components/WeeklyGrid';
 import MobileWeeklyView from './components/MobileWeeklyView';
@@ -26,102 +26,94 @@ const WeeklyPlannerDashboard = () => {
   });
 
   const { user, isAuthenticated } = useAuth();
+  const hasLoadedFromCloud = useRef(false);
 
-  // Mock initial tasks with expanded structure
-  const mockTasks = [
-    {
-      id: 1,
-      title: "Team Meeting",
-      description: "Weekly team sync and project updates",
-      day: "Monday",
-      timeSlot: "Morning",
-      completed: false,
-      createdAt: "2025-09-08T09:00:00.000Z"
-    },
-    {
-      id: 2,
-      title: "Project Review",
-      description: "Review current project status and next steps",
-      day: "Tuesday",
-      timeSlot: "Afternoon",
-      completed: false,
-      createdAt: "2025-09-08T14:00:00.000Z"
-    },
-    {
-      id: 3,
-      title: "Client Call",
-      description: "Discuss requirements with the client",
-      day: "Wednesday",
-      timeSlot: "Morning",
-      completed: true,
-      createdAt: "2025-09-08T10:30:00.000Z"
-    },
-    {
-      id: 4,
-      title: "Code Review",
-      description: "Review pull requests and provide feedback",
-      day: "Thursday",
-      timeSlot: "Afternoon",
-      completed: false,
-      createdAt: "2025-09-08T15:00:00.000Z"
-    },
-    {
-      id: 5,
-      title: "Weekend Planning",
-      description: "Plan activities for the weekend",
-      day: "Friday",
-      timeSlot: "Evening",
-      completed: false,
-      createdAt: "2025-09-08T17:00:00.000Z"
-    }
-  ];
+  // Get app version from HTML meta tag
+  const getAppVersion = () => {
+    const metaTag = document.querySelector('meta[name="app-version"]');
+    return metaTag ? metaTag.getAttribute('content') : 'v1.0.0';
+  };
+
 
   // Load tasks and settings on component mount and auth change
   useEffect(() => {
     const loadData = async () => {
-      if (isAuthenticated && user) {
+      console.log('📥 Loading data:', {
+        isAuthenticated,
+        hasUser: !!user?.uid,
+        userId: user?.uid
+      });
+
+      // Reset the flag when loading new data
+      hasLoadedFromCloud.current = false;
+
+      if (isAuthenticated && user?.uid) {
         try {
           // Load from cloud
-          const cloudTasksResult = await loadTasksFromCloud(user?.uid);
-          const cloudSettingsResult = await loadSettingsFromCloud(user?.uid);
+          console.log('☁️ Loading from Firestore...');
+          const cloudTasksResult = await loadTasksFromCloud(user.uid);
+          const cloudSettingsResult = await loadSettingsFromCloud(user.uid);
           
-          if (cloudTasksResult.exists && cloudTasksResult.tasks?.length > 0) {
-            setTasks(cloudTasksResult.tasks);
+          if (cloudTasksResult.exists) {
+            // If Firestore doc exists, use it (tasks default to [] if missing)
+            console.log('✅ Using Firestore tasks:', cloudTasksResult.tasks);
+            console.log('📍 Task locations being restored:', cloudTasksResult.tasks?.map(task => ({
+              title: task.title,
+              day: task.day,
+              timeSlot: task.timeSlot
+            })));
+            setTasks(cloudTasksResult.tasks || []);
           } else {
-            // If no cloud data, use local storage or mock data
+            // If no cloud data, fallback to localStorage
+            console.log('📭 No Firestore data, falling back to localStorage');
             const savedTasks = localStorage.getItem('weeklyPlannerTasks');
-            setTasks(savedTasks ? JSON.parse(savedTasks) : mockTasks);
+            const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];
+            console.log('💾 Using localStorage tasks:', parsedTasks);
+            setTasks(parsedTasks);
           }
 
-          if (cloudSettingsResult.exists && cloudSettingsResult.settings) {
-            setTimeSlotSettings(cloudSettingsResult.settings);
+          if (cloudSettingsResult.exists) {
+            // If Firestore doc exists, use it (settings default to {} if missing)
+            console.log('✅ Using Firestore settings:', cloudSettingsResult.settings);
+            setTimeSlotSettings(cloudSettingsResult.settings || {});
           } else {
-            // Use local settings if no cloud data
+            // If no cloud data, fallback to localStorage
+            console.log('📭 No Firestore settings, falling back to localStorage');
             const savedSettings = localStorage.getItem('timeSlotSettings');
             if (savedSettings) {
-              setTimeSlotSettings(JSON.parse(savedSettings));
+              const parsedSettings = JSON.parse(savedSettings);
+              console.log('💾 Using localStorage settings:', parsedSettings);
+              setTimeSlotSettings(parsedSettings);
             }
           }
         } catch (error) {
-          console.error('Error loading cloud data:', error);
+          console.error('❌ Error loading cloud data:', error);
           // Fallback to local storage
           const savedTasks = localStorage.getItem('weeklyPlannerTasks');
-          setTasks(savedTasks ? JSON.parse(savedTasks) : mockTasks);
+          const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];
+          console.log('💾 Error fallback: Using localStorage tasks:', parsedTasks);
+          setTasks(parsedTasks);
         }
       } else {
         // Load from local storage for unauthenticated users
+        console.log('👤 Not authenticated, loading from localStorage only');
         const savedTasks = localStorage.getItem('weeklyPlannerTasks');
         const savedSettings = localStorage.getItem('timeSlotSettings');
         const savedHowToUse = localStorage.getItem('showHowToUse');
         
         if (savedTasks) {
-          setTasks(JSON.parse(savedTasks));
+          const parsedTasks = JSON.parse(savedTasks);
+          console.log('💾 Using localStorage tasks (unauthenticated):', parsedTasks);
+          setTasks(parsedTasks);
         } else {
-          setTasks(mockTasks);
+          console.log('📭 No localStorage tasks, using empty array');
+          setTasks([]);
         }
         
         if (savedSettings) {
-          setTimeSlotSettings(JSON.parse(savedSettings));
+          const parsedSettings = JSON.parse(savedSettings);
+          console.log('💾 Using localStorage settings (unauthenticated):', parsedSettings);
+          setTimeSlotSettings(parsedSettings);
         }
         
         if (savedHowToUse !== null) {
@@ -136,18 +128,25 @@ const WeeklyPlannerDashboard = () => {
   // Save tasks to cloud or localStorage
   useEffect(() => {
     const saveData = async () => {
-      if (tasks?.length > 0) {
-        if (isAuthenticated && user) {
-          try {
-            await saveTasksToCloud(tasks, user?.uid);
-          } catch (error) {
-            console.error('Error saving to cloud:', error);
-            // Fallback to local storage
-            localStorage.setItem('weeklyPlannerTasks', JSON.stringify(tasks));
-          }
-        } else {
-          localStorage.setItem('weeklyPlannerTasks', JSON.stringify(tasks));
+      if (isAuthenticated && user?.uid) {
+        if (!hasLoadedFromCloud.current) {
+          // Skip first save after load
+          hasLoadedFromCloud.current = true;
+          return;
         }
+        
+        try {
+          await saveTasksToCloud(tasks, user.uid);
+          console.log('✅ Tasks saved to Firestore successfully');
+        } catch (error) {
+          console.error('❌ Error saving to cloud:', error);
+          // Fallback to local storage
+          localStorage.setItem('weeklyPlannerTasks', JSON.stringify(tasks));
+          console.log('💾 Fallback: Tasks saved to localStorage');
+        }
+      } else {
+        localStorage.setItem('weeklyPlannerTasks', JSON.stringify(tasks));
+        console.log('💾 Tasks saved to localStorage (not authenticated)');
       }
     };
 
@@ -157,9 +156,9 @@ const WeeklyPlannerDashboard = () => {
   // Save settings to cloud or localStorage
   useEffect(() => {
     const saveSettings = async () => {
-      if (isAuthenticated && user) {
+      if (isAuthenticated && user?.uid) {
         try {
-          await saveSettingsToCloud(timeSlotSettings, user?.uid);
+          await saveSettingsToCloud(timeSlotSettings, user.uid);
         } catch (error) {
           console.error('Error saving settings to cloud:', error);
           localStorage.setItem('timeSlotSettings', JSON.stringify(timeSlotSettings));
@@ -192,10 +191,13 @@ const WeeklyPlannerDashboard = () => {
 
   const handleTaskCreate = (newTask) => {
     const taskWithDefaults = {
-      ...newTask,
+      id: newTask?.id || Date.now(),
       title: newTask?.title || 'New Task',
       description: newTask?.description || '',
-      completed: newTask?.completed || false
+      day: newTask?.day || null,
+      timeSlot: newTask?.timeSlot || null,
+      completed: newTask?.completed || false,
+      createdAt: newTask?.createdAt || new Date().toISOString()
     };
     setTasks(prev => [...prev, taskWithDefaults]);
   };
@@ -252,17 +254,11 @@ const WeeklyPlannerDashboard = () => {
   const handleClearAllTasks = () => {
     if (window.confirm('Are you sure you want to clear all tasks? This action cannot be undone.')) {
       setTasks([]);
-      if (isAuthenticated && user) {
-        saveTasksToCloud([], user?.id);
-      } else {
-        localStorage.removeItem('weeklyPlannerTasks');
-      }
+      // Note: The useEffect will automatically save the empty array to Firestore
+      // No need to manually call saveTasksToCloud here
     }
   };
 
-  const handleLoadSampleData = () => {
-    setTasks(mockTasks);
-  };
 
   
 
@@ -322,15 +318,6 @@ const WeeklyPlannerDashboard = () => {
           <div className="flex flex-wrap items-center gap-3 mb-6">
             <Button
               variant="outline"
-              onClick={handleLoadSampleData}
-              iconName="RefreshCw"
-              iconPosition="left"
-              size="sm"
-            >
-              Load Sample
-            </Button>
-            <Button
-              variant="outline"
               onClick={handleClearAllTasks}
               iconName="Trash2"
               iconPosition="left"
@@ -385,7 +372,7 @@ const WeeklyPlannerDashboard = () => {
                 : 'Tasks are saved locally. Sign in to sync across devices.'}
             </p>
             {!isAuthenticated && (
-              <p className="mt-1 text-xs text-gray-400">V1.0.2</p>
+              <p className="mt-1 text-xs text-gray-400">{getAppVersion()}</p>
             )}
           </div>
         </div>

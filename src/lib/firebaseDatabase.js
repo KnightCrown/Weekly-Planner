@@ -18,16 +18,26 @@ import { db } from './firebase';
  */
 export async function saveTasksToCloud(tasks, userId) {
   try {
-    const userDocRef = doc(db, 'users', userId);
-    const tasksData = {
-      tasks: tasks,
+    const normalizedTasks = (tasks || []).map(task => ({
+      id: task.id || Date.now(),
+      title: task.title || "",
+      description: task.description || "",
+      day: task.day || null,
+      timeSlot: task.timeSlot || null,
+      completed: task.completed || false,
+      createdAt: task.createdAt || new Date().toISOString()
+    }));
+
+    const userDocRef = doc(db, "users", userId);
+    await setDoc(userDocRef, {
+      tasks: normalizedTasks,
       updatedAt: serverTimestamp()
-    };
-    
-    await setDoc(userDocRef, tasksData, { merge: true });
-    return { success: true, error: null };
+    }, { merge: true });
+
+    console.log("✅ Tasks saved to Firestore:", normalizedTasks);
+    return { success: true };
   } catch (error) {
-    console.error('Error saving tasks to cloud:', error);
+    console.error("❌ Error saving tasks to cloud:", error);
     return { success: false, error: error.message };
   }
 }
@@ -39,17 +49,26 @@ export async function saveTasksToCloud(tasks, userId) {
  */
 export async function loadTasksFromCloud(userId) {
   try {
-    const userDocRef = doc(db, 'users', userId);
+    const userDocRef = doc(db, "users", userId);
     const userDoc = await getDoc(userDocRef);
-    
+
     if (userDoc.exists()) {
       const data = userDoc.data();
-      return { exists: true, tasks: data.tasks || [] };
+      const tasks = (data.tasks || []).map(task => ({
+        id: task.id,
+        title: task.title,
+        description: task.description || "",
+        day: task.day,
+        timeSlot: task.timeSlot,
+        completed: task.completed || false,
+        createdAt: task.createdAt || null
+      }));
+      return { exists: true, tasks };
     }
-    
+
     return { exists: false, tasks: [] };
   } catch (error) {
-    console.error('Error loading tasks from cloud:', error);
+    console.error("❌ Error loading tasks from cloud:", error);
     return { exists: false, tasks: [] };
   }
 }
@@ -62,6 +81,11 @@ export async function loadTasksFromCloud(userId) {
  */
 export async function saveSettingsToCloud(settings, userId) {
   try {
+    console.log('⚙️ Saving settings to Firestore:', {
+      userId,
+      settings: settings
+    });
+    
     const userDocRef = doc(db, 'users', userId);
     const settingsData = {
       timeSlotSettings: settings,
@@ -69,9 +93,11 @@ export async function saveSettingsToCloud(settings, userId) {
     };
     
     await setDoc(userDocRef, settingsData, { merge: true });
+    
+    console.log('✅ Settings saved successfully to Firestore');
     return { success: true, error: null };
   } catch (error) {
-    console.error('Error saving settings to cloud:', error);
+    console.error('❌ Error saving settings to cloud:', error);
     return { success: false, error: error.message };
   }
 }
@@ -83,17 +109,28 @@ export async function saveSettingsToCloud(settings, userId) {
  */
 export async function loadSettingsFromCloud(userId) {
   try {
+    console.log('⚙️ Loading settings from Firestore for user:', userId);
+    
     const userDocRef = doc(db, 'users', userId);
     const userDoc = await getDoc(userDocRef);
     
     if (userDoc.exists()) {
       const data = userDoc.data();
-      return { exists: true, settings: data.timeSlotSettings || null };
+      const settings = data.timeSlotSettings || {};
+      
+      console.log('✅ Settings loaded from Firestore:', {
+        userId,
+        settings: settings,
+        documentExists: true
+      });
+      
+      return { exists: true, settings: settings };
     }
     
+    console.log('📭 No settings found in Firestore for user:', userId);
     return { exists: false, settings: null };
   } catch (error) {
-    console.error('Error loading settings from cloud:', error);
+    console.error('❌ Error loading settings from cloud:', error);
     return { exists: false, settings: null };
   }
 }
