@@ -14,36 +14,36 @@ const TaskStats = ({ tasks }) => {
       label: 'Total Tasks',
       value: totalTasks,
       icon: 'Calendar',
-      color: 'text-blue-600 dark:text-blue-400',
-      bgColor: 'bg-blue-50 dark:bg-blue-900/20'
+      color: 'text-primary',
+      bgColor: 'bg-primary/10'
     },
     {
       label: 'Today\'s Tasks',
       value: todayTasks,
       icon: 'Clock',
-      color: 'text-green-600 dark:text-green-400',
-      bgColor: 'bg-green-50 dark:bg-green-900/20'
+      color: 'text-success',
+      bgColor: 'bg-success/10'
     },
     {
       label: 'Completion Rate',
       value: totalTasks > 0 ? `${Math.round((completedTasks / totalTasks) * 100)}%` : '0%',
       icon: 'TrendingUp',
-      color: 'text-purple-600 dark:text-purple-400',
-      bgColor: 'bg-purple-50 dark:bg-purple-900/20'
+      color: 'text-accent',
+      bgColor: 'bg-accent/10'
     }
   ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       {stats?.map((stat, index) => (
-        <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+        <div key={index} className="bg-card rounded-lg shadow-sm border border-border p-4">
           <div className="flex items-center">
             <div className={`p-2 rounded-lg ${stat?.bgColor} mr-3`}>
               <Icon name={stat?.icon} size={20} className={stat?.color} />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{stat?.label}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat?.value}</p>
+              <p className="text-sm font-medium text-muted-foreground">{stat?.label}</p>
+              <p className="text-2xl font-bold text-foreground">{stat?.value}</p>
             </div>
           </div>
         </div>

@@ -57,6 +57,9 @@ export default {
           DEFAULT: 'var(--color-surface)', // slate-50
           foreground: 'var(--color-surface-foreground)', // slate-900
         },
+        header: {
+          DEFAULT: 'var(--color-header)', // white
+        },
         'text-primary': 'var(--color-text-primary)', // slate-900
         'text-secondary': 'var(--color-text-secondary)', // slate-500
       },

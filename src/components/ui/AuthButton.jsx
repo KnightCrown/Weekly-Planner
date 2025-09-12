@@ -31,10 +31,10 @@ const AuthButton = ({ className = "" }) => {
             }}
           />
           <div className="hidden sm:block">
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-foreground">
               {user?.displayName || user?.email || 'User'}
             </p>
-            <p className="text-xs text-gray-500">Cloud Sync Active</p>
+            <p className="text-xs text-muted-foreground">Cloud Sync Active</p>
           </div>
         </div>
         <Button

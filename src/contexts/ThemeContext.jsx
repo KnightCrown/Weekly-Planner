@@ -29,7 +29,7 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     // Apply theme to document
     const root = document.documentElement;
-    root.classList.remove('light', 'dark');
+    root.classList.remove('light', 'dark', 'strawberry');
     root.classList.add(theme);
     
     // Save to localStorage

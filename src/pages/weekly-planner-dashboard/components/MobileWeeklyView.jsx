@@ -76,7 +76,7 @@ const MobileWeeklyView = ({
                 onClick={() => setSelectedDay(day)}
                 className={`flex-shrink-0 px-4 py-2 mx-1 rounded-lg text-sm font-medium transition-all ${
                   selectedDay === day
-                    ? 'bg-blue-600 text-white' :'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-primary text-primary-foreground' :'bg-muted text-muted-foreground hover:bg-muted/80'
                 }`}
               >
                 <div className="text-center">
@@ -93,7 +93,7 @@ const MobileWeeklyView = ({
       {/* Time Slots for Selected Day */}
       <div className="space-y-4">
         {timeSlots?.map(timeSlot => (
-          <div key={timeSlot} className="bg-gray-50 rounded-lg p-4">
+          <div key={timeSlot} className="bg-muted rounded-lg p-4">
             {/* Time Slot Header with Editable Name and Subtitle */}
             <div className="mb-3">
               <div className="mb-1">
@@ -104,13 +104,13 @@ const MobileWeeklyView = ({
                     onChange={(e) => setEditValue(e?.target?.value)}
                     onBlur={handleTimeSlotSave}
                     onKeyDown={handleKeyPress}
-                    className="w-full max-w-[200px] font-semibold text-gray-900 text-lg bg-transparent border border-gray-300 rounded px-1 py-0.5"
+                    className="w-full max-w-[200px] font-semibold text-foreground text-lg bg-input border border-input rounded px-1 py-0.5"
                     autoFocus
                     maxLength={20}
                   />
                 ) : (
                   <h3 
-                    className="font-semibold text-gray-900 text-lg cursor-pointer hover:text-blue-600 transition-colors flex items-center group"
+                    className="font-semibold text-foreground text-lg cursor-pointer hover:text-primary transition-colors flex items-center group"
                     onClick={() => handleTimeSlotEdit(timeSlot, 'name', timeSlotSettings?.[timeSlot]?.name)}
                   >
                     {timeSlotSettings?.[timeSlot]?.name}
@@ -127,13 +127,13 @@ const MobileWeeklyView = ({
                     onChange={(e) => setEditValue(e?.target?.value)}
                     onBlur={handleTimeSlotSave}
                     onKeyDown={handleKeyPress}
-                    className="w-full max-w-[250px] text-sm text-gray-500 bg-transparent border border-gray-300 rounded px-1 py-0.5"
+                    className="w-full max-w-[250px] text-sm text-muted-foreground bg-input border border-input rounded px-1 py-0.5"
                     autoFocus
                     maxLength={30}
                   />
                 ) : (
                   <p 
-                    className="text-sm text-gray-500 cursor-pointer hover:text-blue-500 transition-colors group flex items-center"
+                    className="text-sm text-muted-foreground cursor-pointer hover:text-primary transition-colors group flex items-center"
                     onClick={() => handleTimeSlotEdit(timeSlot, 'subtitle', timeSlotSettings?.[timeSlot]?.subtitle)}
                   >
                     {timeSlotSettings?.[timeSlot]?.subtitle || 'Add subtitle...'}

@@ -287,7 +287,7 @@ const WeeklyPlannerDashboard = () => {
   
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <Header onHelpClick={() => setShowHowToUse(true)} />
       
       <main className="pt-16">
@@ -296,8 +296,8 @@ const WeeklyPlannerDashboard = () => {
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Weekly Planner</h1>
-                <p className="text-gray-600 dark:text-gray-300">
+                <h1 className="text-3xl font-bold text-foreground mb-2">Weekly Planner</h1>
+                <p className="text-muted-foreground">
                   Organize your week with drag-and-drop task management
                 </p>
               </div>
@@ -312,18 +312,18 @@ const WeeklyPlannerDashboard = () => {
 
           {/* Instructions */}
           {showHowToUse && (
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6 relative">
+            <div className="bg-muted border border-border rounded-lg p-4 mb-6 relative">
               <button
                 onClick={() => setShowHowToUse(false)}
-                className="absolute top-2 right-2 p-1 hover:bg-blue-100 dark:hover:bg-blue-800 rounded-full transition-colors"
+                className="absolute top-2 right-2 p-1 hover:bg-muted-foreground/10 rounded-full transition-colors"
               >
-                <Icon name="X" size={16} className="text-blue-600 dark:text-blue-400" />
+                <Icon name="X" size={16} className="text-muted-foreground" />
               </button>
               <div className="flex items-start pr-8">
-                <Icon name="Info" size={20} className="text-blue-600 dark:text-blue-400 mr-3 mt-0.5" />
+                <Icon name="Info" size={20} className="text-primary mr-3 mt-0.5" />
                 <div>
-                  <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-1">How to use:</h3>
-                  <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                  <h3 className="font-medium text-foreground mb-1">How to use:</h3>
+                  <ul className="text-sm text-muted-foreground space-y-1">
                     <li>• Click on empty gray boxes to create new tasks</li>
                     <li>• Drag and drop tasks between different time slots</li>
                     <li>• Click on existing tasks to edit their content</li>
@@ -356,7 +356,7 @@ const WeeklyPlannerDashboard = () => {
           
 
           {/* Weekly Grid */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-card rounded-lg shadow-sm border border-border p-6">
             {isMobile ? (
               <MobileWeeklyView
                 tasks={tasks}
@@ -390,13 +390,13 @@ const WeeklyPlannerDashboard = () => {
 
           {/* Footer Info */}
           <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground">
               {isAuthenticated 
                 ? 'Tasks are automatically synced to your account (Firebase)'
                 : 'Tasks are saved locally. Sign in to sync across devices.'}
             </p>
             {!isAuthenticated && (
-              <p className="mt-1 text-xs text-gray-400">{getAppVersion()}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{getAppVersion()}</p>
             )}
           </div>
         </div>

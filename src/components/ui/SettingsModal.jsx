@@ -64,7 +64,8 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
 
   const themeOptions = [
     { value: 'light', label: 'Light' },
-    { value: 'dark', label: 'Dark' }
+    { value: 'dark', label: 'Dark' },
+    { value: 'strawberry', label: 'Strawberry' }
   ];
 
 
@@ -79,12 +80,12 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
       />
       
       {/* Modal */}
-      <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-card rounded-lg shadow-xl border border-border w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between p-6 border-b border-border">
           <div className="flex items-center space-x-3">
-            <Icon name="Settings" size={20} className="text-gray-600 dark:text-gray-400" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Settings</h2>
+            <Icon name="Settings" size={20} className="text-muted-foreground" />
+            <h2 className="text-lg font-semibold text-foreground">Settings</h2>
           </div>
           <Button
             variant="ghost"
@@ -100,7 +101,7 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
         <div className="p-6 space-y-6">
           {/* Theme Setting */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white">Theme</h3>
+            <h3 className="text-sm font-medium text-foreground">Theme</h3>
             <Select
               options={themeOptions}
               value={localSettings.theme}
@@ -112,14 +113,14 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
 
           {/* Color Customization */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white">Color Customization</h3>
+            <h3 className="text-sm font-medium text-foreground">Color Customization</h3>
             
             {/* Background Color */}
             <div className="space-y-2">
-              <label className="text-xs font-medium text-gray-700 dark:text-gray-300">Background</label>
+              <label className="text-xs font-medium text-foreground">Background</label>
               <div className="flex items-center space-x-3">
                 <div 
-                  className="w-8 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer"
+                  className="w-8 h-8 rounded border border-border cursor-pointer"
                   style={{ backgroundColor: localSettings.colors?.background || '#FFFFFF' }}
                   onClick={() => {
                     const input = document.createElement('input');
@@ -141,10 +142,10 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
 
             {/* Primary Color */}
             <div className="space-y-2">
-              <label className="text-xs font-medium text-gray-700 dark:text-gray-300">Primary</label>
+              <label className="text-xs font-medium text-foreground">Primary</label>
               <div className="flex items-center space-x-3">
                 <div 
-                  className="w-8 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer"
+                  className="w-8 h-8 rounded border border-border cursor-pointer"
                   style={{ backgroundColor: localSettings.colors?.primary || '#2563EB' }}
                   onClick={() => {
                     const input = document.createElement('input');
@@ -166,10 +167,10 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
 
             {/* Accent Color */}
             <div className="space-y-2">
-              <label className="text-xs font-medium text-gray-700 dark:text-gray-300">Accent</label>
+              <label className="text-xs font-medium text-foreground">Accent</label>
               <div className="flex items-center space-x-3">
                 <div 
-                  className="w-8 h-8 rounded border border-gray-300 dark:border-gray-600 cursor-pointer"
+                  className="w-8 h-8 rounded border border-border cursor-pointer"
                   style={{ backgroundColor: localSettings.colors?.accent || '#10B981' }}
                   onClick={() => {
                     const input = document.createElement('input');
@@ -192,7 +193,7 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-end space-x-3 p-6 border-t border-border">
           <Button
             variant="outline"
             onClick={handleCancel}

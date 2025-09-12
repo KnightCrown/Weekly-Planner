@@ -58,6 +58,9 @@
     /* Text Colors */
     --color-text-primary: #0F172A; /* slate-900 */
     --color-text-secondary: #64748B; /* slate-500 */
+    
+    /* Header Colors */
+    --color-header: #FFFFFF; /* white */
   }
 
   .dark {
@@ -113,6 +116,67 @@
     /* Text Colors */
     --color-text-primary: #F8FAFC; /* slate-50 */
     --color-text-secondary: #94A3B8; /* slate-400 */
+    
+    /* Header Colors */
+    --color-header: #1E293B; /* slate-800 */
+  }
+
+  .strawberry {
+    /* Core Colors - Baby Pink Theme */
+    --color-background: #FDF2F8; /* pink-50 */
+    --color-foreground: #831843; /* pink-900 */
+    --color-border: #F9A8D4; /* pink-300 */
+    --color-input: #FFF7FC; /* custom light pink */
+    --color-ring: #EC4899; /* pink-500 */
+    
+    /* Card Colors */
+    --color-card: #FFEDF7; /* custom pink */
+    --color-card-foreground: #831843; /* pink-900 */
+    --color-popover: #FFEDF7; /* custom pink */
+    --color-popover-foreground: #831843; /* pink-900 */
+    
+    /* Muted Colors */
+    --color-muted: #FFF7FC; /* custom light pink */
+    --color-muted-foreground: #BE185D; /* pink-700 */
+    
+    /* Primary Colors */
+    --color-primary: #EC4899; /* pink-500 */
+    --color-primary-foreground: #FFFFFF; /* white */
+    
+    /* Secondary Colors */
+    --color-secondary: #BE185D; /* pink-700 */
+    --color-secondary-foreground: #FFFFFF; /* white */
+    
+    /* Destructive Colors */
+    --color-destructive: #DC2626; /* red-600 */
+    --color-destructive-foreground: #FFFFFF; /* white */
+    
+    /* Accent Colors */
+    --color-accent: #F472B6; /* pink-400 */
+    --color-accent-foreground: #FFFFFF; /* white */
+    
+    /* Success Colors */
+    --color-success: #059669; /* emerald-600 */
+    --color-success-foreground: #FFFFFF; /* white */
+    
+    /* Warning Colors */
+    --color-warning: #D97706; /* amber-600 */
+    --color-warning-foreground: #FFFFFF; /* white */
+    
+    /* Error Colors */
+    --color-error: #DC2626; /* red-600 */
+    --color-error-foreground: #FFFFFF; /* white */
+    
+    /* Surface Colors */
+    --color-surface: #FCE7F3; /* pink-100 */
+    --color-surface-foreground: #831843; /* pink-900 */
+    
+    /* Text Colors */
+    --color-text-primary: #831843; /* pink-900 */
+    --color-text-secondary: #BE185D; /* pink-700 */
+    
+    /* Header Colors */
+    --color-header: #FFDDEB; /* custom light pink for header */
   }
   
   * {

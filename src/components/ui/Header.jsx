@@ -55,7 +55,7 @@ const Header = ({ onHelpClick }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 h-16">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-header border-b border-border h-16">
       <div className="flex items-center justify-between h-full px-6">
         {/* Logo Section */}
         <div className="flex items-center">
@@ -63,7 +63,7 @@ const Header = ({ onHelpClick }) => {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Icon name="Calendar" size={20} color="white" />
             </div>
-            <h1 className="text-xl font-semibold text-text-primary dark:text-white">WeeklyBlocks</h1>
+            <h1 className="text-xl font-semibold text-foreground">WeeklyBlocks</h1>
           </div>
         </div>
 
@@ -102,12 +102,12 @@ const Header = ({ onHelpClick }) => {
                   className="fixed inset-0 z-10" 
                   onClick={() => setIsMoreMenuOpen(false)}
                 />
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-20">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-popover rounded-lg shadow-lg border border-border py-2 z-20">
                   {secondaryNavItems?.map((item) => (
                     <button
                       key={item?.path}
                       onClick={() => handleNavigation(item?.path)}
-                      className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-text-primary dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
+                      className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-popover-foreground hover:bg-muted transition-colors duration-150"
                     >
                       <Icon name={item?.icon} size={16} />
                       <span>{item?.label}</span>
@@ -132,7 +132,7 @@ const Header = ({ onHelpClick }) => {
       </div>
       {/* Mobile Navigation Menu */}
       {isMoreMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-lg">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-popover border-b border-border shadow-lg">
           <div className="py-2">
             {primaryNavItems?.map((item) => (
               <button
@@ -140,7 +140,7 @@ const Header = ({ onHelpClick }) => {
                 onClick={() => handleNavigation(item?.path)}
                 className={`w-full flex items-center space-x-3 px-6 py-3 text-sm transition-colors duration-150 ${
                   isActivePath(item?.path)
-                    ? 'bg-primary text-white' :'text-text-primary dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
+                    ? 'bg-primary text-primary-foreground' :'text-popover-foreground hover:bg-muted'
                 }`}
               >
                 <Icon name={item?.icon} size={18} />
@@ -148,12 +148,12 @@ const Header = ({ onHelpClick }) => {
               </button>
             ))}
             
-            <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
+            <div className="border-t border-border mt-2 pt-2">
               {secondaryNavItems?.map((item) => (
                 <button
                   key={item?.path}
                   onClick={() => handleNavigation(item?.path)}
-                  className="w-full flex items-center space-x-3 px-6 py-3 text-sm text-text-primary dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
+                  className="w-full flex items-center space-x-3 px-6 py-3 text-sm text-popover-foreground hover:bg-muted transition-colors duration-150"
                 >
                   <Icon name={item?.icon} size={18} />
                   <span>{item?.label}</span>

@@ -67,13 +67,13 @@ const WeeklyGrid = ({
       <div className="min-w-[800px]">
         {/* Header Row */}
         <div className="grid grid-cols-8 gap-4 mb-4">
-          <div className="font-semibold text-gray-700 dark:text-gray-300 text-sm"></div>
+          <div className="font-semibold text-muted-foreground text-sm"></div>
           {days?.map(day => {
             const currentDate = getCurrentWeekDate(day);
             return (
               <div key={day} className="text-center">
-                <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">{day}</h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <h3 className="font-semibold text-foreground text-sm mb-1">{day}</h3>
+                <p className="text-xs text-muted-foreground">
                   {formatPlannerDate(currentDate)}
                 </p>
               </div>
@@ -94,13 +94,13 @@ const WeeklyGrid = ({
                     onChange={(e) => setEditValue(e?.target?.value)}
                     onBlur={handleTimeSlotSave}
                     onKeyDown={handleKeyPress}
-                    className="w-full max-w-[120px] font-medium text-gray-700 dark:text-gray-300 text-sm bg-transparent border border-gray-300 dark:border-gray-600 rounded px-1 py-0.5"
+                    className="w-full max-w-[120px] font-medium text-foreground text-sm bg-input border border-input rounded px-1 py-0.5"
                     autoFocus
                     maxLength={20}
                   />
                 ) : (
                   <span 
-                    className="font-medium text-gray-700 dark:text-gray-300 text-sm cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center group max-w-[120px] truncate"
+                    className="font-medium text-foreground text-sm cursor-pointer hover:text-primary transition-colors flex items-center group max-w-[120px] truncate"
                     onClick={() => handleTimeSlotEdit(timeSlot, 'name', timeSlotSettings?.[timeSlot]?.name)}
                   >
                     {timeSlotSettings?.[timeSlot]?.name}
@@ -118,13 +118,13 @@ const WeeklyGrid = ({
                     onChange={(e) => setEditValue(e?.target?.value)}
                     onBlur={handleTimeSlotSave}
                     onKeyDown={handleKeyPress}
-                    className="w-full max-w-[120px] text-xs text-gray-500 dark:text-gray-400 bg-transparent border border-gray-300 dark:border-gray-600 rounded px-1 py-0.5"
+                    className="w-full max-w-[120px] text-xs text-muted-foreground bg-input border border-input rounded px-1 py-0.5"
                     autoFocus
                     maxLength={30}
                   />
                 ) : (
                   <span 
-                    className="text-xs text-gray-500 dark:text-gray-400 cursor-pointer hover:text-blue-500 dark:hover:text-blue-400 transition-colors group flex items-center max-w-[120px] truncate"
+                    className="text-xs text-muted-foreground cursor-pointer hover:text-primary transition-colors group flex items-center max-w-[120px] truncate"
                     onClick={() => handleTimeSlotEdit(timeSlot, 'subtitle', timeSlotSettings?.[timeSlot]?.subtitle)}
                   >
                     {timeSlotSettings?.[timeSlot]?.subtitle || 'Add subtitle...'}
