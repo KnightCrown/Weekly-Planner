@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase, signInWithGoogle, signOut, getCurrentUser } from '../lib/supabase';
+import { onAuthStateChange, signOut, getCurrentUser } from '../lib/firebaseAuth';
 
 /**
  * Custom hook for managing authentication state
@@ -10,45 +10,22 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    getCurrentUser()?.then(user => {
-      setUser(user);
+    // Seed with current user if available
+    const current = getCurrentUser();
+    if (current) {
+      setUser(current);
+    }
+
+    // Subscribe to Firebase Auth state changes
+    const unsubscribe = onAuthStateChange((firebaseUser) => {
+      setUser(firebaseUser || null);
       setLoading(false);
     });
 
-    // Listen for auth changes only if supabase is configured
-    if (supabase) {
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        async (event, session) => {
-          setUser(session?.user || null);
-          setLoading(false);
-        }
-      );
-
-      return () => subscription?.unsubscribe();
-    } else {
-      setLoading(false);
-    }
+    return () => {
+      try { unsubscribe && unsubscribe(); } catch (_) {}
+    };
   }, []);
-
-  const handleSignIn = async () => {
-    try {
-      setLoading(true);
-      await signInWithGoogle();
-    } catch (error) {
-      console.error('Sign in error:', error);
-      setLoading(false);
-      
-      // Show user-friendly error message
-      if (error.message?.includes('provider is not enabled')) {
-        alert('Google sign-in is not configured. Please enable Google OAuth in your Supabase project dashboard under Authentication > Providers.');
-      } else if (error.message?.includes('OAuth configuration error')) {
-        alert('OAuth configuration error. Please check your Google OAuth settings in Supabase Dashboard.');
-      } else {
-        alert('Sign-in failed. Please check your configuration and try again.');
-      }
-    }
-  };
 
   const handleSignOut = async () => {
     try {
@@ -65,7 +42,6 @@ export function useAuth() {
   return {
     user,
     loading,
-    signIn: handleSignIn,
     signOut: handleSignOut,
     isAuthenticated: !!user,
   };

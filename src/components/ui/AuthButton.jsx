@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from './Button';
 import Icon from '../AppIcon';
 import { useAuth } from '../../hooks/useAuth';
-import { supabase } from '../../lib/supabase';
+import AuthModal from './AuthModal';
 
 const AuthButton = ({ className = "" }) => {
-  const { user, loading, signIn, signOut, isAuthenticated } = useAuth();
+  const { user, loading, signOut, isAuthenticated } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   if (loading) {
     return (
@@ -21,16 +23,16 @@ const AuthButton = ({ className = "" }) => {
       <div className={`flex items-center space-x-3 ${className}`}>
         <div className="flex items-center space-x-2">
           <img
-            src={user?.user_metadata?.avatar_url}
-            alt={user?.user_metadata?.full_name || 'User'}
+            src={!avatarError ? (user?.photoURL || undefined) : undefined}
+            alt={user?.displayName || user?.email || 'User'}
             className="w-8 h-8 rounded-full"
             onError={(e) => {
-              e.target.style.display = 'none';
+              setAvatarError(true);
             }}
           />
           <div className="hidden sm:block">
             <p className="text-sm font-medium text-gray-900">
-              {user?.user_metadata?.full_name || 'User'}
+              {user?.displayName || user?.email || 'User'}
             </p>
             <p className="text-xs text-gray-500">Cloud Sync Active</p>
           </div>
@@ -48,28 +50,23 @@ const AuthButton = ({ className = "" }) => {
     );
   }
 
-  // Show configuration message if Supabase is not configured
-  if (!supabase) {
-    return (
-      <div className={`flex items-center space-x-2 ${className}`}>
-        <Icon name="AlertCircle" size={16} className="text-amber-500" />
-        <span className="text-sm text-amber-600">
-          Configure Supabase to enable sign-in
-        </span>
-      </div>
-    );
-  }
-
   return (
-    <Button
-      variant="outline"
-      onClick={signIn}
-      iconName="LogIn"
-      iconPosition="left"
-      className={className}
-    >
-      Sign In with Google
-    </Button>
+    <>
+      <Button
+        variant="outline"
+        onClick={() => setIsModalOpen(true)}
+        iconName="LogIn"
+        iconPosition="left"
+        className={className}
+      >
+        Sign In
+      </Button>
+      <AuthModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onAuthSuccess={() => setIsModalOpen(false)}
+      />
+    </>
   );
 };
 

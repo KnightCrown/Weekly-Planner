@@ -8,7 +8,7 @@ import Icon from '../../components/AppIcon';
 import AuthButton from '../../components/ui/AuthButton';
 
 import { useAuth } from '../../hooks/useAuth';
-import { saveTasksToCloud, loadTasksFromCloud, saveSettingsToCloud, loadSettingsFromCloud, supabase } from '../../lib/supabase';
+import { saveTasksToCloud, loadTasksFromCloud, saveSettingsToCloud, loadSettingsFromCloud } from '../../lib/firebaseDatabase';
  
 
 const WeeklyPlannerDashboard = () => {
@@ -79,11 +79,11 @@ const WeeklyPlannerDashboard = () => {
   // Load tasks and settings on component mount and auth change
   useEffect(() => {
     const loadData = async () => {
-      if (isAuthenticated && user && supabase) {
+      if (isAuthenticated && user) {
         try {
           // Load from cloud
-          const cloudTasks = await loadTasksFromCloud(user?.id);
-          const cloudSettings = await loadSettingsFromCloud(user?.id);
+          const cloudTasks = await loadTasksFromCloud(user?.uid);
+          const cloudSettings = await loadSettingsFromCloud(user?.uid);
           
           if (cloudTasks?.length > 0) {
             setTasks(cloudTasks);
@@ -109,7 +109,7 @@ const WeeklyPlannerDashboard = () => {
           setTasks(savedTasks ? JSON.parse(savedTasks) : mockTasks);
         }
       } else {
-        // Load from local storage for unauthenticated users or when Supabase is not configured
+        // Load from local storage for unauthenticated users
         const savedTasks = localStorage.getItem('weeklyPlannerTasks');
         const savedSettings = localStorage.getItem('timeSlotSettings');
         const savedHowToUse = localStorage.getItem('showHowToUse');
@@ -137,9 +137,9 @@ const WeeklyPlannerDashboard = () => {
   useEffect(() => {
     const saveData = async () => {
       if (tasks?.length > 0) {
-        if (isAuthenticated && user && supabase) {
+        if (isAuthenticated && user) {
           try {
-            await saveTasksToCloud(tasks, user?.id);
+            await saveTasksToCloud(tasks, user?.uid);
           } catch (error) {
             console.error('Error saving to cloud:', error);
             // Fallback to local storage
@@ -157,9 +157,9 @@ const WeeklyPlannerDashboard = () => {
   // Save settings to cloud or localStorage
   useEffect(() => {
     const saveSettings = async () => {
-      if (isAuthenticated && user && supabase) {
+      if (isAuthenticated && user) {
         try {
-          await saveSettingsToCloud(timeSlotSettings, user?.id);
+          await saveSettingsToCloud(timeSlotSettings, user?.uid);
         } catch (error) {
           console.error('Error saving settings to cloud:', error);
           localStorage.setItem('timeSlotSettings', JSON.stringify(timeSlotSettings));
@@ -288,28 +288,7 @@ const WeeklyPlannerDashboard = () => {
             </div>
           </div>
 
-          {/* Supabase Configuration Notice */}
-          {!supabase && (
-            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
-              <div className="flex items-start">
-                <Icon name="AlertTriangle" size={20} className="text-amber-600 dark:text-amber-400 mr-3 mt-0.5" />
-                <div>
-                  <h3 className="font-medium text-amber-900 dark:text-amber-100 mb-1">Supabase Configuration Required</h3>
-                  <p className="text-sm text-amber-800 dark:text-amber-200 mb-2">
-                    To enable Google sign-in and cloud sync, please configure your Supabase credentials.
-                  </p>
-                  <ol className="text-sm text-amber-800 dark:text-amber-200 space-y-1 ml-4">
-                    <li>1. Create a <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="underline">Supabase project</a></li>
-                    <li>2. Copy <code className="bg-amber-100 dark:bg-amber-800 px-1 rounded">env.template</code> to <code className="bg-amber-100 dark:bg-amber-800 px-1 rounded">.env.local</code></li>
-                    <li>3. Add your Supabase URL and API key to <code className="bg-amber-100 dark:bg-amber-800 px-1 rounded">.env.local</code></li>
-                    <li>4. Enable Google OAuth in Supabase Dashboard (Authentication → Providers → Google)</li>
-                    <li>5. Set up Google OAuth credentials (see README.md for details)</li>
-                    <li>6. Restart the development server</li>
-                  </ol>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Firebase is used for auth and cloud sync. No configuration notice needed here. */}
 
           {/* Instructions */}
           {showHowToUse && (
@@ -329,7 +308,7 @@ const WeeklyPlannerDashboard = () => {
                     <li>• Drag and drop tasks between different time slots</li>
                     <li>• Click on existing tasks to edit their content</li>
                     <li>• Click on time slot names to customize them</li>
-                    <li>• {!supabase ? 'Configure Supabase to enable cloud sync' : isAuthenticated ? 'Your tasks are saved to the cloud' : 'Sign in to sync tasks across devices'}</li>
+                    <li>• {isAuthenticated ? 'Your tasks are saved to the cloud' : 'Sign in to sync tasks across devices'}</li>
                   </ul>
                 </div>
               </div>
@@ -401,13 +380,13 @@ const WeeklyPlannerDashboard = () => {
           {/* Footer Info */}
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {!supabase 
-                ? 'Tasks are saved locally. Configure Supabase to enable cloud sync.'
-                : isAuthenticated 
-                  ? 'Tasks are automatically synced to your Google account' 
-                  : 'Tasks are saved locally. Sign in to sync across devices.'
-              }
+              {isAuthenticated 
+                ? 'Tasks are automatically synced to your account (Firebase)'
+                : 'Tasks are saved locally. Sign in to sync across devices.'}
             </p>
+            {!isAuthenticated && (
+              <p className="mt-1 text-xs text-gray-400">V1.0.2</p>
+            )}
           </div>
         </div>
       </main>
