@@ -11,6 +11,15 @@ const TaskModal = ({ task, onSave, onDelete, onClose }) => {
     completed: task?.completed || false
   });
 
+  // Update form data when task changes
+  useEffect(() => {
+    setFormData({
+      title: task?.title || '',
+      description: task?.description || '',
+      completed: task?.completed || false
+    });
+  }, [task]);
+
   useEffect(() => {
     const handleEscape = (e) => {
       if (e?.key === 'Escape') {
@@ -35,6 +44,7 @@ const TaskModal = ({ task, onSave, onDelete, onClose }) => {
   };
 
   const handleChange = (field, value) => {
+    console.log('TaskModal handleChange:', { field, value, currentFormData: formData });
     setFormData(prev => ({
       ...prev,
       [field]: value

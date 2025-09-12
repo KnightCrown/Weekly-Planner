@@ -13,6 +13,7 @@ const Checkbox = React.forwardRef(({
     description,
     error,
     size = "default",
+    onChange,
     ...props
 }, ref) => {
     // Generate unique ID if not provided
@@ -35,6 +36,7 @@ const Checkbox = React.forwardRef(({
                     checked={checked}
                     disabled={disabled}
                     required={required}
+                    onChange={(e) => onChange?.(e.target.checked)}
                     className="sr-only"
                     {...props}
                 />
@@ -49,6 +51,12 @@ const Checkbox = React.forwardRef(({
                         error && "border-destructive",
                         disabled && "cursor-not-allowed opacity-50"
                     )}
+                    onClick={(e) => {
+                        if (!disabled) {
+                            e.preventDefault();
+                            onChange?.(!checked);
+                        }
+                    }}
                 >
                     {checked && !indeterminate && (
                         <Check className="h-3 w-3 text-current flex items-center justify-center" />
