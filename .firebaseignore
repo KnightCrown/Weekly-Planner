@@ -1,0 +1,14 @@
+# Firebase config files (handled separately)
+.firebaserc
+firebase.json
+
+.DS_Store
+node_modules
+.idea
+package-lock.json
+/build
+.vscode/
+.idea/
+vite.config.*s.*
+.env
+.env.local
