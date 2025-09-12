@@ -7,7 +7,6 @@ import Input from './Input';
 const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
   const [localSettings, setLocalSettings] = useState({
     theme: 'light',
-    startOfWeek: 'monday',
     colors: {
       background: '#FFFFFF',
       primary: '#2563EB',
@@ -20,7 +19,6 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
     if (isOpen && settings) {
       setLocalSettings({
         theme: settings.theme || 'light',
-        startOfWeek: settings.startOfWeek || 'monday',
         colors: {
           background: settings.colors?.background || '#FFFFFF',
           primary: settings.colors?.primary || '#2563EB',
@@ -38,7 +36,6 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
   const handleCancel = () => {
     setLocalSettings(settings || {
       theme: 'light',
-      startOfWeek: 'monday',
       colors: {
         background: '#FFFFFF',
         primary: '#2563EB',
@@ -70,10 +67,6 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
     { value: 'dark', label: 'Dark' }
   ];
 
-  const startOfWeekOptions = [
-    { value: 'sunday', label: 'Sunday' },
-    { value: 'monday', label: 'Monday' }
-  ];
 
   if (!isOpen) return null;
 
@@ -116,16 +109,6 @@ const SettingsModal = ({ isOpen, onClose, settings, onSettingsChange }) => {
             />
           </div>
 
-          {/* Start of Week Setting */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white">Start of the Week</h3>
-            <Select
-              options={startOfWeekOptions}
-              value={localSettings.startOfWeek}
-              onChange={(value) => updateSetting('startOfWeek', value)}
-              placeholder="Select start of week"
-            />
-          </div>
 
           {/* Color Customization */}
           <div className="space-y-4">
