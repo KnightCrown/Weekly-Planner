@@ -27,6 +27,7 @@ const WeeklyPlannerDashboard = () => {
 
   const { user, isAuthenticated } = useAuth();
   const hasLoadedFromCloud = useRef(false);
+  const [hasUserMadeChanges, setHasUserMadeChanges] = useState(false);
 
   // Get app version from HTML meta tag
   const getAppVersion = () => {
@@ -44,8 +45,9 @@ const WeeklyPlannerDashboard = () => {
         userId: user?.uid
       });
 
-      // Reset the flag when loading new data
+      // Reset the flags when loading new data
       hasLoadedFromCloud.current = false;
+      setHasUserMadeChanges(false);
 
       if (isAuthenticated && user?.uid) {
         try {
@@ -128,6 +130,12 @@ const WeeklyPlannerDashboard = () => {
   // Save tasks to cloud or localStorage
   useEffect(() => {
     const saveData = async () => {
+      // Only save if user has made changes
+      if (!hasUserMadeChanges) {
+        console.log('⏸️ Skipping save - no user changes detected');
+        return;
+      }
+
       if (isAuthenticated && user?.uid) {
         if (!hasLoadedFromCloud.current) {
           // Skip first save after load
@@ -151,11 +159,17 @@ const WeeklyPlannerDashboard = () => {
     };
 
     saveData();
-  }, [tasks, isAuthenticated, user]);
+  }, [tasks, isAuthenticated, user, hasUserMadeChanges]);
 
   // Save settings to cloud or localStorage
   useEffect(() => {
     const saveSettings = async () => {
+      // Only save if user has made changes
+      if (!hasUserMadeChanges) {
+        console.log('⏸️ Skipping settings save - no user changes detected');
+        return;
+      }
+
       if (isAuthenticated && user?.uid) {
         try {
           await saveSettingsToCloud(timeSlotSettings, user.uid);
@@ -169,7 +183,7 @@ const WeeklyPlannerDashboard = () => {
     };
 
     saveSettings();
-  }, [timeSlotSettings, isAuthenticated, user]);
+  }, [timeSlotSettings, isAuthenticated, user, hasUserMadeChanges]);
 
   // Save how to use visibility state
   useEffect(() => {
@@ -200,16 +214,22 @@ const WeeklyPlannerDashboard = () => {
       createdAt: newTask?.createdAt || new Date().toISOString()
     };
     setTasks(prev => [...prev, taskWithDefaults]);
+    setHasUserMadeChanges(true); // Mark that user has made changes
+    console.log('📝 User created task - changes will be saved');
   };
 
   const handleTaskUpdate = (taskId, updatedTask) => {
     setTasks(prev => prev?.map(task => 
       task?.id === taskId ? updatedTask : task
     ));
+    setHasUserMadeChanges(true); // Mark that user has made changes
+    console.log('📝 User updated task - changes will be saved');
   };
 
   const handleTaskDelete = (taskId) => {
     setTasks(prev => prev?.filter(task => task?.id !== taskId));
+    setHasUserMadeChanges(true); // Mark that user has made changes
+    console.log('📝 User deleted task - changes will be saved');
   };
 
   const handleTimeSlotUpdate = (timeSlot, updates) => {
@@ -217,6 +237,8 @@ const WeeklyPlannerDashboard = () => {
       ...prev,
       [timeSlot]: { ...prev?.[timeSlot], ...updates }
     }));
+    setHasUserMadeChanges(true); // Mark that user has made changes
+    console.log('📝 User updated settings - changes will be saved');
   };
 
   const handleDragStart = (e, task) => {
@@ -254,6 +276,8 @@ const WeeklyPlannerDashboard = () => {
   const handleClearAllTasks = () => {
     if (window.confirm('Are you sure you want to clear all tasks? This action cannot be undone.')) {
       setTasks([]);
+      setHasUserMadeChanges(true); // Mark that user has made changes
+      console.log('📝 User cleared all tasks - changes will be saved');
       // Note: The useEffect will automatically save the empty array to Firestore
       // No need to manually call saveTasksToCloud here
     }
