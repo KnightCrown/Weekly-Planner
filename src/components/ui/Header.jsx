@@ -85,7 +85,7 @@ const Header = ({ onHelpClick }) => {
         </nav>
 
         {/* Right Section */}
-        <div className="flex items-center space-x-2">
+        <div className="hidden md:flex items-center space-x-2">
           {/* More Menu */}
           <div className="relative">
             <Button
