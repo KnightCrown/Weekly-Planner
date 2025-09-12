@@ -23,7 +23,7 @@ const AuthButton = ({ className = "" }) => {
       <div className={`flex items-center space-x-3 ${className}`}>
         <div className="flex items-center space-x-2">
           <img
-            src={!avatarError ? (user?.photoURL || undefined) : undefined}
+            src={!avatarError ? (user?.photoURL || '/assets/images/no_image.png') : undefined}
             alt={user?.displayName || user?.email || 'User'}
             className="w-8 h-8 rounded-full"
             onError={(e) => {

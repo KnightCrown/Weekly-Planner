@@ -82,19 +82,19 @@ const WeeklyPlannerDashboard = () => {
       if (isAuthenticated && user) {
         try {
           // Load from cloud
-          const cloudTasks = await loadTasksFromCloud(user?.uid);
-          const cloudSettings = await loadSettingsFromCloud(user?.uid);
+          const cloudTasksResult = await loadTasksFromCloud(user?.uid);
+          const cloudSettingsResult = await loadSettingsFromCloud(user?.uid);
           
-          if (cloudTasks?.length > 0) {
-            setTasks(cloudTasks);
+          if (cloudTasksResult.exists && cloudTasksResult.tasks?.length > 0) {
+            setTasks(cloudTasksResult.tasks);
           } else {
             // If no cloud data, use local storage or mock data
             const savedTasks = localStorage.getItem('weeklyPlannerTasks');
             setTasks(savedTasks ? JSON.parse(savedTasks) : mockTasks);
           }
 
-          if (cloudSettings) {
-            setTimeSlotSettings(cloudSettings);
+          if (cloudSettingsResult.exists && cloudSettingsResult.settings) {
+            setTimeSlotSettings(cloudSettingsResult.settings);
           } else {
             // Use local settings if no cloud data
             const savedSettings = localStorage.getItem('timeSlotSettings');

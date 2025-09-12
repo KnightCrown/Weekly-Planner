@@ -44,13 +44,13 @@ export async function loadTasksFromCloud(userId) {
     
     if (userDoc.exists()) {
       const data = userDoc.data();
-      return data.tasks || [];
+      return { exists: true, tasks: data.tasks || [] };
     }
     
-    return [];
+    return { exists: false, tasks: [] };
   } catch (error) {
     console.error('Error loading tasks from cloud:', error);
-    return [];
+    return { exists: false, tasks: [] };
   }
 }
 
@@ -88,13 +88,13 @@ export async function loadSettingsFromCloud(userId) {
     
     if (userDoc.exists()) {
       const data = userDoc.data();
-      return data.timeSlotSettings || null;
+      return { exists: true, settings: data.timeSlotSettings || null };
     }
     
-    return null;
+    return { exists: false, settings: null };
   } catch (error) {
     console.error('Error loading settings from cloud:', error);
-    return null;
+    return { exists: false, settings: null };
   }
 }
 

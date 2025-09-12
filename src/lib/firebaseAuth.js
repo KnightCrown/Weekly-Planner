@@ -41,12 +41,11 @@ export async function createUserWithEmail(email, password, displayName) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     
-    // Update the user's display name
-    if (displayName) {
-      await updateProfile(userCredential.user, {
-        displayName: displayName
-      });
-    }
+    // Update the user's profile (display name and default avatar)
+    await updateProfile(userCredential.user, {
+      displayName: displayName || userCredential.user.displayName || email?.split('@')[0],
+      photoURL: userCredential.user.photoURL || '/assets/images/no_image.png'
+    });
     
     return {
       user: userCredential.user,
@@ -68,6 +67,10 @@ export async function createUserWithEmail(email, password, displayName) {
 export async function signInWithGoogle() {
   try {
     const result = await signInWithPopup(auth, googleProvider);
+    // Ensure a photoURL is set; if missing, apply default
+    if (!result.user.photoURL) {
+      try { await updateProfile(result.user, { photoURL: '/assets/images/no_image.png' }); } catch (_) {}
+    }
     return {
       user: result.user,
       error: null
