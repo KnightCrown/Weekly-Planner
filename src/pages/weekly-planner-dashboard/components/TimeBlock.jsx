@@ -116,7 +116,7 @@ const TimeBlock = ({
       <div
         className={`relative h-20 border border-border rounded-lg shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md ${
           task?.completed 
-            ? 'bg-success/10 border-success/30 hover:bg-success/20' :'bg-card hover:bg-muted'
+            ? 'bg-success border-success hover:bg-success/90' :'bg-card hover:bg-muted'
         } ${isDragOver ? 'ring-2 ring-primary' : ''}`}
         draggable
         onDragStart={handleDragStart}
@@ -126,13 +126,13 @@ const TimeBlock = ({
       >
         <div className="p-3 h-full flex items-center justify-center">
           <p className={`text-sm font-medium text-center line-clamp-3 leading-tight ${
-            task?.completed ? 'text-success' : 'text-foreground'
+            task?.completed ? 'text-success-foreground' : 'text-foreground'
           }`}>
             {task?.title}
           </p>
           {task?.completed && (
             <div className="absolute top-2 right-2">
-              <Icon name="Check" size={14} className="text-success" />
+              <Icon name="Check" size={14} className="text-success-foreground" />
             </div>
           )}
         </div>
