@@ -10,7 +10,7 @@
     --color-background: #FFFFFF; /* white */
     --color-foreground: #0F172A; /* slate-900 */
     --color-border: #E2E8F0; /* slate-200 */
-    --color-input: #FFFFFF; /* white */
+    --color-input: #f3f3f3; /* custom gray */
     --color-ring: #2563EB; /* blue-600 */
     
     /* Card Colors */
@@ -68,7 +68,7 @@
     --color-background: #0F172A; /* slate-900 */
     --color-foreground: #F8FAFC; /* slate-50 */
     --color-border: #334155; /* slate-700 */
-    --color-input: #1E293B; /* slate-800 */
+    --color-input: #2E3C4F; /* custom dark blue-gray */
     --color-ring: #3B82F6; /* blue-500 */
     
     /* Card Colors */
